@@ -2,13 +2,15 @@ import { useState, useMemo } from 'react';
 import useTripStore from '../../store/TripStore';
 import BudgetTracker from './BudgetTracker';
 import ExportButtons from './ExportButtons';
-import { Star, MessageCircle, ThumbsUp, MapPin, Clock, DollarSign } from 'lucide-react';
+import { Star, MessageCircle, ThumbsUp, MapPin, Clock, DollarSign, Map as MapIcon, Info } from 'lucide-react';
 import usePlaceImage from '../../hooks/usePlaceImage';
 import ActivityCard from './ActivityCard';
+import InteractiveMap from './InteractiveMap';
 
 export default function DashboardLayout() {
   const { itinerary, criteria, isLoadingItinerary, hoveredActivityId } = useTripStore();
   const [selectedDay, setSelectedDay] = useState(1);
+  const [viewMode, setViewMode] = useState<'details' | 'map'>('details');
 
   if (isLoadingItinerary) {
     return (
@@ -98,12 +100,32 @@ export default function DashboardLayout() {
 
       {/* Right Panel: Activity Spotlight & Reviews */}
       <div className="hidden md:flex flex-1 bg-surface/30 relative h-full overflow-hidden flex-col">
-        {showcasedActivity ? (
-          <SpotlightPanel activity={showcasedActivity} destination={criteria.destination} />
+        {/* Toggle Switch */}
+        <div className="absolute top-6 right-6 z-20 flex bg-background/60 backdrop-blur-md p-1 rounded-xl border border-white/10 shadow-xl">
+          <button 
+            onClick={() => setViewMode('details')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-xs font-bold uppercase tracking-wider ${viewMode === 'details' ? 'bg-primary text-white shadow-lg' : 'text-text-muted hover:text-text'}`}
+          >
+            <Info size={14} /> Details
+          </button>
+          <button 
+            onClick={() => setViewMode('map')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-xs font-bold uppercase tracking-wider ${viewMode === 'map' ? 'bg-primary text-white shadow-lg' : 'text-text-muted hover:text-text'}`}
+          >
+            <MapIcon size={14} /> Map View
+          </button>
+        </div>
+
+        {viewMode === 'details' ? (
+          showcasedActivity ? (
+            <SpotlightPanel activity={showcasedActivity} destination={criteria.destination} />
+          ) : (
+            <div className="flex-1 flex items-center justify-center text-text-muted">
+              Select an activity to see details
+            </div>
+          )
         ) : (
-          <div className="flex-1 flex items-center justify-center text-text-muted">
-            Select an activity to see details
-          </div>
+          <InteractiveMap dayPlan={currentDayPlan} />
         )}
       </div>
 

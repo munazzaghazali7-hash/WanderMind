@@ -13,7 +13,7 @@ It takes your destination, budget, travel vibes, and group type, and orchestrate
 - **Comprehensive Test Suite**: 100% pass rate on core logic (Vitest).
 - **Accessibility Optimized**: WCAG compliant semantic structure and ARIA support.
 
-## Problem Statement: Hyper-Personalized Travel Planning
+## Alignment with Problem Statement: Hyper-Personalized Travel Planning
 
 ### The Challenge
 Modern travel planning is fragmented. Travelers often spend hours across multiple platforms (blogs, maps, booking sites) to create a cohesive itinerary that fits their specific budget, group size, and "vibe". Most existing solutions provide generic recommendations that don't account for the intricate balance between morning, afternoon, and evening slots or strict budget constraints.
