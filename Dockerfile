@@ -3,6 +3,11 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Declare build argument (passed via --build-arg or Cloud Build substitution)
+ARG VITE_GEMINI_API_KEY
+# Expose it as an ENV var so Vite can read it at build time
+ENV VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY
+
 # Copy package files
 COPY package*.json ./
 
@@ -12,7 +17,7 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build the app for production
+# Build the app (Vite bakes VITE_* env vars into the JS bundle here)
 RUN npm run build
 
 # Production stage using Nginx

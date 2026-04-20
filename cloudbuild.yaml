@@ -1,0 +1,42 @@
+steps:
+  # Step 1: Build the Docker image
+  # The Gemini API key is passed as a build arg from Cloud Build substitutions
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--build-arg'
+      - 'VITE_GEMINI_API_KEY=${_VITE_GEMINI_API_KEY}'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wandermind:$COMMIT_SHA'
+      - '.'
+
+  # Step 2: Push the image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/wandermind:$COMMIT_SHA'
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'wandermind'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/wandermind:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+
+images:
+  - 'gcr.io/$PROJECT_ID/wandermind:$COMMIT_SHA'
+
+# Define substitution variables
+# Set _VITE_GEMINI_API_KEY in Cloud Build trigger settings (NOT here for security)
+substitutions:
+  _VITE_GEMINI_API_KEY: ''
