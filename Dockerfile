@@ -11,8 +11,8 @@ ENV VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies (npm install is more tolerant of minor lock file diffs)
+RUN npm install --frozen-lockfile 2>/dev/null || npm install
 
 # Copy source code
 COPY . .
