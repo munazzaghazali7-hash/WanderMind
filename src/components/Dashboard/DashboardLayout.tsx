@@ -40,15 +40,23 @@ export default function DashboardLayout() {
   }, [hoveredActivityId, itinerary, currentDayPlan]);
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+    <main className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
       {/* Left Panel: Itinerary Details */}
       <div className="w-full md:w-1/2 lg:w-2/5 flex flex-col h-full bg-surface/50 border-r border-white/10">
         
         {/* Day Tabs */}
-        <div className="flex overflow-x-auto p-4 gap-2 border-b border-white/10 hide-scrollbar shrink-0">
+        <div 
+          role="tablist" 
+          aria-label="Trip Itinerary Days"
+          className="flex overflow-x-auto p-4 gap-2 border-b border-white/10 hide-scrollbar shrink-0"
+        >
           {itinerary.map((day) => (
             <button
               key={day.dayNumber}
+              role="tab"
+              aria-selected={selectedDay === day.dayNumber}
+              aria-controls={`day-panel-${day.dayNumber}`}
+              id={`day-tab-${day.dayNumber}`}
               onClick={() => setSelectedDay(day.dayNumber)}
               className={`px-6 py-2 rounded-full whitespace-nowrap transition-all font-medium ${
                 selectedDay === day.dayNumber 
@@ -69,16 +77,20 @@ export default function DashboardLayout() {
           <ExportButtons />
         </div>
 
-        {/* Activities Scroll Area */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth pb-32">
+        <div 
+          role="tabpanel"
+          id={`day-panel-${selectedDay}`}
+          aria-labelledby={`day-tab-${selectedDay}`}
+          className="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth pb-32"
+        >
           {['morning', 'afternoon', 'evening'].map((slotName) => {
             const slot = currentDayPlan.slots[slotName as keyof typeof currentDayPlan.slots];
             if (!slot) return null;
             return (
-              <div key={`${selectedDay}-${slotName}`} className="space-y-3">
+              <section key={`${selectedDay}-${slotName}`} className="space-y-3">
                 <h3 className="text-sm uppercase tracking-wider text-primary font-bold ml-1">{slotName}</h3>
                 <ActivityCard activity={slot} />
-              </div>
+              </section>
             );
           })}
         </div>
@@ -97,7 +109,7 @@ export default function DashboardLayout() {
 
       {/* Bottom Bar: Budget Tracker */}
       <BudgetTracker />
-    </div>
+    </main>
   );
 }
 

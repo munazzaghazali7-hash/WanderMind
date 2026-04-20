@@ -39,8 +39,11 @@ export async function generateItinerary(criteria: TripCriteria): Promise<DayPlan
     }
   });
 
+  // Sanitize criteria values for safety
+  const safeDestination = criteria.destination.replace(/[<>]/g, '');
+
   const prompt = `
-    Create a travel itinerary for ${criteria.groupSize} going to ${criteria.destination}.
+    Create a travel itinerary for ${criteria.groupSize} going to ${safeDestination}.
     Start Date: ${criteria.startDate?.toISOString().split('T')[0]}
     End Date: ${criteria.endDate?.toISOString().split('T')[0]}
     Total Budget: ${criteria.budget} ${criteria.currency}.
@@ -57,6 +60,11 @@ export async function generateItinerary(criteria: TripCriteria): Promise<DayPlan
   try {
     const response = await model.generateContent(prompt);
     const jsonStr = response.response.text();
+    
+    if (!jsonStr || jsonStr.trim() === '') {
+      throw new Error("Empty response from AI");
+    }
+
     const data = JSON.parse(jsonStr);
     
     // Convert parsed JSON into DayPlan[] with Date objects

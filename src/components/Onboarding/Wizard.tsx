@@ -44,7 +44,14 @@ export default function Wizard() {
     <div className="flex-1 flex flex-col items-center justify-center p-6 mt-12 mb-24">
       <div className="glass-panel max-w-xl w-full rounded-2xl p-8 shadow-2xl relative overflow-hidden">
         {/* Progress Bar */}
-        <div className="absolute top-0 left-0 h-1 bg-white/10 w-full">
+        <div 
+          role="progressbar"
+          aria-valuenow={step}
+          aria-valuemin={1}
+          aria-valuemax={5}
+          aria-label="Onboarding progress"
+          className="absolute top-0 left-0 h-1 bg-white/10 w-full"
+        >
           <div 
             className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-300" 
             style={{ width: `${(step / 5) * 100}%` }}
@@ -59,10 +66,11 @@ export default function Wizard() {
         {step === 1 && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
             <div className="space-y-2">
-              <label className="flex items-center gap-2 font-medium text-lg text-primary-dark">
+              <label htmlFor="destination-input" className="flex items-center gap-2 font-medium text-lg text-primary-dark">
                 <MapPin size={20} /> Destination
               </label>
               <input 
+                id="destination-input"
                 type="text" 
                 placeholder="Where to? (e.g., Tokyo, Japan)" 
                 className="w-full bg-surface p-4 rounded-xl border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
@@ -88,16 +96,18 @@ export default function Wizard() {
               </label>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <span className="text-xs text-text-muted">Start</span>
+                  <label htmlFor="start-date" className="text-xs text-text-muted">Start</label>
                   <input 
+                    id="start-date"
                     type="date" 
                     className="w-full bg-surface p-4 rounded-xl border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                     onChange={(e) => updateCriteria({ startDate: e.target.value ? new Date(e.target.value) : null })}
                   />
                 </div>
                 <div className="space-y-1">
-                  <span className="text-xs text-text-muted">End</span>
+                  <label htmlFor="end-date" className="text-xs text-text-muted">End</label>
                   <input 
+                    id="end-date"
                     type="date" 
                     className="w-full bg-surface p-4 rounded-xl border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                     onChange={(e) => updateCriteria({ endDate: e.target.value ? new Date(e.target.value) : null })}
@@ -125,7 +135,9 @@ export default function Wizard() {
                 <DollarSign size={20} /> Budget
               </label>
               <div className="flex gap-2">
+                <label htmlFor="currency-select" className="sr-only">Currency</label>
                 <select 
+                  id="currency-select"
                   className="bg-surface p-4 rounded-xl border border-white/10 outline-none w-1/3"
                   value={criteria.currency}
                   onChange={(e) => updateCriteria({ currency: e.target.value as any })}
@@ -134,7 +146,9 @@ export default function Wizard() {
                   <option value="EUR">EUR (€)</option>
                   <option value="INR">INR (₹)</option>
                 </select>
+                <label htmlFor="budget-input" className="sr-only">Total Budget</label>
                 <input 
+                  id="budget-input"
                   type="number" 
                   min="0"
                   placeholder="Total budget" 

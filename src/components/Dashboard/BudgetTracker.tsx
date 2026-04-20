@@ -1,20 +1,13 @@
 import useTripStore from '../../store/TripStore';
+import { calculateTotalSpent, getBudgetStatus } from '../../utils/budgetUtils';
+
 export default function BudgetTracker() {
   const { itinerary, criteria } = useTripStore();
 
   const totalBudget = criteria.budget;
-  let spent = 0;
-
-  itinerary.forEach(day => {
-    ['morning', 'afternoon', 'evening'].forEach(slot => {
-      const activity = day.slots[slot as keyof typeof day.slots];
-      if (activity && activity.estimatedCost) {
-        spent += activity.estimatedCost;
-      }
-    });
-  });
-
+  const spent = calculateTotalSpent(itinerary);
   const percentage = totalBudget > 0 ? (spent / totalBudget) * 100 : 0;
+  const status = getBudgetStatus(spent, totalBudget);
   
   let statusColor = 'bg-green-500';
   let textColor = 'text-green-400';
@@ -44,13 +37,20 @@ export default function BudgetTracker() {
              percentage >= 80 ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' :
              'bg-green-500/20 text-green-300 border border-green-500/30'
           }`}>
-            {percentage >= 100 ? 'Over Budget' : percentage >= 80 ? 'Near Limit' : 'On Track'}
+            {status}
           </span>
         </div>
       </div>
       
       {/* Progress Bar */}
-      <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden mt-2">
+      <div 
+        role="progressbar"
+        aria-valuenow={Math.round(spent)}
+        aria-valuemin={0}
+        aria-valuemax={totalBudget}
+        aria-label="Budget utilization"
+        className="h-2 w-full bg-black/40 rounded-full overflow-hidden mt-2"
+      >
         <div 
           className={`h-full ${statusColor} transition-all duration-500`} 
           style={{ width: `${Math.min(percentage, 100)}%` }} 

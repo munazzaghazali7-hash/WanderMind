@@ -14,7 +14,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
   const displayRating = activity.rating || (4 + (activity.name.length % 10) / 10).toFixed(1);
 
   return (
-    <div 
+    <article 
       onMouseEnter={() => setHoveredActivityId(activity.id)}
       onMouseLeave={() => setHoveredActivityId(null)}
       className="glass-panel rounded-3xl border border-white/10 hover:border-primary/50 transition-all duration-300 group relative overflow-hidden flex flex-col h-full hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(var(--color-primary),0.3)] bg-gradient-to-b from-white/5 to-transparent"
@@ -62,10 +62,11 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
             </h4>
           </div>
           <button 
+            aria-label={`Surprise me with an alternative for ${activity.name}`}
             title="Surprise me with an alternative!"
             className="shrink-0 p-2.5 rounded-full bg-background/80 hover:bg-white/20 text-text hover:text-white transition-all border border-white/10 backdrop-blur-xl shadow-lg"
           >
-            <Sparkles size={16} />
+            <Sparkles size={16} aria-hidden="true" />
           </button>
         </div>
 
@@ -100,7 +101,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
           <span className="text-secondary shrink-0 opacity-80">✦</span>
           <span className="line-clamp-2 opacity-80">{activity.vibeReason}</span>
         </div>
-      </div>
+      </article>
     </div>
   );
 }
