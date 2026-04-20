@@ -12,7 +12,34 @@ It takes your destination, budget, travel vibes, and group type, and orchestrate
 - **Robust Google Services**: Integrated with `@react-oauth/google` for seamless (mock-ready) Calendar and Docs export.
 - **Comprehensive Test Suite**: 100% pass rate on core logic (Vitest).
 - **Accessibility Optimized**: WCAG compliant semantic structure and ARIA support.
-- **Project Alignment**: See [PROBLEM_STATEMENT.md](./PROBLEM_STATEMENT.md) and [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed alignment and design decisions.
+
+## Problem Statement: Hyper-Personalized Travel Planning
+
+### The Challenge
+Modern travel planning is fragmented. Travelers often spend hours across multiple platforms (blogs, maps, booking sites) to create a cohesive itinerary that fits their specific budget, group size, and "vibe". Most existing solutions provide generic recommendations that don't account for the intricate balance between morning, afternoon, and evening slots or strict budget constraints.
+
+### WanderMind's Solution
+WanderMind addresses this by providing a unified, AI-orchestrated planning experience.
+1.  **Context-Aware Orchestration**: Uses Gemini to understand the "vibe" and build a cohesive narrative.
+2.  **Strict Budget Enforcement**: Dynamically calculates costs and warns users when they approach limits.
+3.  **Time-Slot Optimization**: Categorizes activities into Morning, Afternoon, and Evening slots.
+4.  **Privacy-First Architecture**: Operates entirely client-side with no persistent user data storage.
+
+## Architecture
+
+### Tech Stack
+- **Frontend**: React 19, Vite, TypeScript
+- **Styling**: Tailwind CSS 4
+- **State Management**: Zustand
+- **AI Engine**: Google Gemini API
+- **Maps**: Google Maps JavaScript API
+- **Testing**: Vitest, React Testing Library
+- **Deployment**: Google Cloud Run (Dockerized)
+
+### Security & Accessibility
+- **Input Sanitization**: AI-generated content is sanitized and parsed via schemas.
+- **A11y**: Semantic HTML5 structure, ARIA labels, and keyboard-friendly navigation.
+- **No Backend**: Zero user data persistence for maximum privacy.
 
 ## Setup Instructions
 
